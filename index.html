@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>貓咪少年物語</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d0f14;font-family:'Microsoft JhengHei','PingFang TC','Heiti TC',sans-serif;color:#e2e8f0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:12px}
+.gw{width:100%;max-width:480px;background:#161b25;border:1px solid #2a3347;border-radius:20px;overflow:hidden;box-shadow:0 0 60px rgba(100,120,255,.15)}
+
+/* TITLE */
+.title{display:flex;flex-direction:column;align-items:center;padding:44px 28px;gap:14px;text-align:center}
+.title-cat{font-size:4.5rem;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.title h1{font-size:2rem;font-weight:700;background:linear-gradient(135deg,#a78bfa,#60a5fa,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.35}
+.title-sub{color:#64748b;font-size:.82rem}
+.btn-start{padding:13px 40px;background:linear-gradient(135deg,#7c3aed,#3b82f6);border:none;border-radius:12px;color:#fff;font-size:1rem;font-family:inherit;cursor:pointer;letter-spacing:2px;box-shadow:0 4px 20px rgba(124,58,237,.4);transition:all .2s;width:100%}
+.btn-start:active{transform:scale(.97)}
+
+/* FORMS */
+.form-screen{padding:28px;display:flex;flex-direction:column;gap:16px}
+.form-screen h2{font-size:1.3rem;font-weight:700;color:#a78bfa}
+.fg{display:flex;flex-direction:column;gap:6px}
+.fg label{font-size:.8rem;color:#94a3b8}
+.fi{padding:10px 14px;background:#1e2535;border:1px solid #2a3347;border-radius:10px;color:#e2e8f0;font-family:inherit;font-size:.95rem;outline:none;transition:border-color .2s;width:100%}
+.fi:focus{border-color:#7c3aed}
+.job-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.jb{padding:11px 6px;border-radius:10px;border:2px solid #2a3347;background:#1e2535;color:#94a3b8;cursor:pointer;font-family:inherit;font-size:.85rem;transition:all .2s;text-align:center}
+.jb.sel{border-color:#7c3aed;background:rgba(124,58,237,.15);color:#a78bfa}
+
+/* HEADER */
+.hdr{padding:14px 18px 10px;background:linear-gradient(180deg,#1a2035,#161b25);border-bottom:1px solid #2a3347}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start}
+.ci h2{font-size:1.1rem;font-weight:700}
+.badge{font-size:.68rem;color:#a78bfa;background:rgba(124,58,237,.15);padding:2px 7px;border-radius:20px;border:1px solid rgba(124,58,237,.3);display:inline-block;margin-top:2px}
+.cs{text-align:right;font-size:.75rem;color:#94a3b8}
+.gold{color:#fbbf24;font-weight:700}
+.bars{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.br{display:flex;align-items:center;gap:7px}
+.bl{font-size:.68rem;color:#64748b;width:42px}
+.bt{flex:1;height:6px;background:#1e2535;border-radius:99px;overflow:hidden}
+.bf{height:100%;border-radius:99px;transition:width .3s}
+.bf.hp{background:linear-gradient(90deg,#ef4444,#f87171)}
+.bf.hg{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+.bf.md{background:linear-gradient(90deg,#8b5cf6,#a78bfa)}
+.bf.ep{background:linear-gradient(90deg,#3b82f6,#60a5fa)}
+.bv{font-size:.67rem;color:#64748b;width:36px;text-align:right}
+
+/* TABS */
+.tabs{display:flex;background:#111520;border-bottom:1px solid #2a3347}
+.tb{flex:1;padding:10px 2px;background:none;border:none;border-bottom:2px solid transparent;color:#475569;font-family:inherit;font-size:.68rem;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:1px}
+.tb .ti{font-size:1.1rem}
+.tb.act{color:#a78bfa;border-bottom-color:#7c3aed}
+
+/* CONTENT */
+.mc{padding:14px;min-height:350px}
+.st{font-size:.72rem;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:7px}
+
+/* HOME */
+.cat-disp{background:#1e2535;border-radius:12px;padding:16px;text-align:center;border:1px solid #2a3347;font-family:monospace;font-size:1rem;line-height:1.7}
+.cat-ears{color:#a78bfa;font-size:1.2rem}
+.dlg{background:#111827;border:1px solid #2a3347;border-radius:10px;padding:10px 13px;font-size:.84rem;color:#cbd5e1;line-height:1.6;min-height:50px;position:relative}
+.dlg::before{content:"💬";position:absolute;top:-10px;left:12px;font-size:.9rem}
+.ag{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.ab{padding:9px 6px;border-radius:9px;border:1px solid #2a3347;background:#1e2535;color:#e2e8f0;font-family:inherit;font-size:.8rem;cursor:pointer;transition:all .2s}
+.ab:active{background:#263248;transform:scale(.97)}
+.fg2{display:flex;gap:7px;flex-wrap:wrap}
+.fb{flex:1;min-width:64px;padding:7px 3px;border-radius:9px;border:1px solid #2a3347;background:#1e2535;color:#e2e8f0;font-family:inherit;font-size:.73rem;cursor:pointer;text-align:center;transition:all .2s}
+.fb:active{background:#263248}
+.fi2{font-size:1.2rem;display:block}
+.fp{color:#fbbf24;font-size:.68rem;margin-top:1px}
+.logbox{background:#111520;border:1px solid #1e2535;border-radius:9px;padding:9px 12px;height:80px;overflow-y:auto;font-size:.72rem;display:flex;flex-direction:column;gap:2px}
+
+/* MAP */
+.map-wrap{display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto}
+.village-card{background:#1e2535;border:1px solid #2a3347;border-radius:12px;padding:13px;cursor:pointer;transition:all .2s;position:relative}
+.village-card.locked{opacity:.5;cursor:not-allowed}
+.village-card.current{border-color:#7c3aed;background:rgba(124,58,237,.1)}
+.village-card.cleared{border-color:#10b981;background:rgba(16,185,129,.06)}
+.vc-top{display:flex;justify-content:space-between;align-items:center}
+.vc-name{font-size:.95rem;font-weight:700;color:#e2e8f0}
+.vc-badge{font-size:.68rem;padding:2px 8px;border-radius:20px}
+.vc-badge.cur{background:rgba(124,58,237,.2);color:#a78bfa;border:1px solid rgba(124,58,237,.4)}
+.vc-badge.clr{background:rgba(16,185,129,.2);color:#10b981;border:1px solid rgba(16,185,129,.4)}
+.vc-badge.lck{background:#1e2535;color:#475569;border:1px solid #2a3347}
+.vc-desc{font-size:.75rem;color:#64748b;margin-top:4px}
+.vc-stats{display:flex;gap:10px;margin-top:6px;font-size:.72rem}
+.vc-stats span{color:#94a3b8}
+.vc-stats .red{color:#f87171}
+.vc-stats .yel{color:#fbbf24}
+
+/* BATTLE AREA */
+.area-screen{display:flex;flex-direction:column;gap:10px}
+.area-header{display:flex;justify-content:space-between;align-items:center}
+.area-title{font-size:1rem;font-weight:700;color:#e2e8f0}
+.monster-list{display:flex;flex-direction:column;gap:7px;max-height:320px;overflow-y:auto}
+.mc-card{background:#1e2535;border:1px solid #2a3347;border-radius:11px;padding:12px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all .2s}
+.mc-card:active{border-color:#ef4444;background:#221820}
+.mc-card.boss{border-color:#f59e0b;background:rgba(245,158,11,.06)}
+.mc-left{display:flex;align-items:center;gap:9px}
+.mc-emoji{font-size:1.7rem}
+.mc-name{font-size:.88rem;font-weight:700;color:#e2e8f0}
+.mc-stats{font-size:.72rem;color:#64748b;margin-top:2px}
+.mc-right{text-align:right;font-size:.73rem}
+.mc-right .e{color:#60a5fa}
+.mc-right .g{color:#fbbf24}
+.boss-label{font-size:.65rem;color:#f59e0b;background:rgba(245,158,11,.15);padding:1px 6px;border-radius:10px;border:1px solid rgba(245,158,11,.3)}
+
+/* BATTLE */
+.battle-wrap{padding:16px;display:flex;flex-direction:column;gap:12px}
+.b-header{text-align:center;font-size:1rem;font-weight:700;color:#f87171}
+.b-field{background:#1e2535;border-radius:12px;padding:14px;border:1px solid #2a3347;display:flex;justify-content:space-between;align-items:center}
+.fighter{text-align:center;flex:1}
+.fn{font-size:.75rem;color:#94a3b8;margin-bottom:3px}
+.fe{font-size:2.2rem;margin:3px 0}
+.fh{font-size:.73rem}
+.vs{font-size:1.1rem;color:#475569}
+.b-log{background:#111520;border:1px solid #2a3347;border-radius:9px;padding:9px 12px;height:90px;overflow-y:auto;font-size:.76rem;display:flex;flex-direction:column;gap:3px}
+.b-acts{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.bb{padding:11px;border-radius:9px;border:none;font-family:inherit;font-size:.85rem;cursor:pointer;transition:all .2s}
+.bb.atk{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff}
+.bb.itm{background:linear-gradient(135deg,#059669,#10b981);color:#fff}
+.bb.fle{background:#1e2535;border:1px solid #2a3347;color:#94a3b8;grid-column:span 2}
+.bb:active:not(:disabled){transform:scale(.97)}
+.bb:disabled{opacity:.4;cursor:not-allowed}
+.b-result{text-align:center;padding:14px;background:#1e2535;border-radius:11px;border:1px solid #2a3347}
+.b-result h3{font-size:1.2rem;margin-bottom:8px}
+.win h3{color:#fbbf24}
+.lose h3{color:#f87171}
+.drop-box{background:#111520;border:1px solid #2a3347;border-radius:9px;padding:10px;margin-top:8px;font-size:.8rem;color:#a78bfa}
+
+/* SHOP */
+.shop-tabs{display:flex;gap:7px;margin-bottom:10px}
+.stb{flex:1;padding:7px;border-radius:8px;border:1px solid #2a3347;background:#1e2535;color:#64748b;font-family:inherit;font-size:.78rem;cursor:pointer;transition:all .2s}
+.stb.act{border-color:#7c3aed;background:rgba(124,58,237,.15);color:#a78bfa}
+.item-list{display:flex;flex-direction:column;gap:7px;max-height:370px;overflow-y:auto}
+.ic{background:#1e2535;border:1px solid #2a3347;border-radius:10px;padding:11px;display:flex;justify-content:space-between;align-items:center}
+.il{display:flex;align-items:center;gap:9px}
+.ie{font-size:1.4rem}
+.iname{font-size:.84rem;color:#e2e8f0}
+.istat{font-size:.7rem;color:#64748b;margin-top:1px}
+.irar{font-size:.65rem;padding:1px 6px;border-radius:10px;margin-top:2px;display:inline-block}
+.rar-n{background:rgba(148,163,184,.1);color:#94a3b8;border:1px solid #2a3347}
+.rar-r{background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+.rar-e{background:rgba(168,85,247,.1);color:#c084fc;border:1px solid rgba(168,85,247,.3)}
+.rar-l{background:rgba(245,158,11,.1);color:#fbbf24;border:1px solid rgba(245,158,11,.3)}
+.buy-btn{padding:5px 12px;border-radius:7px;border:none;background:linear-gradient(135deg,#7c3aed,#3b82f6);color:#fff;font-family:inherit;font-size:.76rem;cursor:pointer;white-space:nowrap}
+.sell-btn{padding:5px 10px;border-radius:7px;border:1px solid #f59e0b;background:transparent;color:#f59e0b;font-family:inherit;font-size:.73rem;cursor:pointer;white-space:nowrap}
+.sell-btn:active{background:rgba(245,158,11,.1)}
+
+/* INVENTORY */
+.eq-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.es{background:#111520;border:1px dashed #2a3347;border-radius:9px;padding:8px;text-align:center}
+.es-lbl{font-size:.62rem;color:#475569}
+.es-item{font-size:1.1rem;margin:3px 0}
+.es-name{font-size:.62rem;color:#94a3b8}
+.inv-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;max-height:280px;overflow-y:auto}
+.inv-card{background:#1e2535;border:1px solid #2a3347;border-radius:9px;padding:10px;text-align:center;cursor:pointer;transition:all .2s}
+.inv-card:active{border-color:#7c3aed}
+.inv-e{font-size:1.8rem}
+.inv-n{font-size:.73rem;color:#e2e8f0;margin-top:3px}
+.inv-s{font-size:.66rem;color:#64748b;margin-top:1px}
+.inv-qty{font-size:.65rem;color:#fbbf24}
+
+/* MISC */
+.notif{position:fixed;top:18px;left:50%;transform:translateX(-50%);padding:9px 18px;border-radius:9px;font-size:.82rem;z-index:9999;animation:sld .25s ease;pointer-events:none}
+@keyframes sld{from{opacity:0;transform:translate(-50%,-8px)}to{opacity:1;transform:translate(-50%,0)}}
+.ns{background:#065f46;border:1px solid #10b981;color:#6ee7b7}
+.ne{background:#7f1d1d;border:1px solid #ef4444;color:#fca5a5}
+.ni{background:#1e3a5f;border:1px solid #3b82f6;color:#93c5fd}
+.hidden{display:none}
+.btn-back{padding:8px 14px;border-radius:8px;border:1px solid #2a3347;background:#1e2535;color:#94a3b8;font-family:inherit;font-size:.78rem;cursor:pointer}
+.btn-p{padding:11px 22px;border-radius:9px;border:none;background:linear-gradient(135deg,#7c3aed,#3b82f6);color:#fff;font-family:inherit;font-size:.86rem;cursor:pointer;transition:all .2s}
+.btn-p:active{opacity:.9;transform:scale(.97)}
+.day-badge{font-size:.7rem;color:#475569;margin-top:1px}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#2a3347;border-radius:99px}
+.full-w{width:100%}
+.flex-row{display:flex;gap:8px}
+.flex1{flex:1}
+</style>
+</head>
+<body>
+<div id="notif" class="notif hidden"></div>
+<div class="gw"><div id="app"></div></div>
+<script>
+// ══════════════════════════════════════════════════
+// 資料定義
+// ══════════════════════════════════════════════════
+const JOBS=["見習劍士","流浪者","魔法師","暗影刺客"];
+const JOB_ICONS={"見習劍士":"⚔️","流浪者":"🗡️","魔法師":"🔮","暗影刺客":"🌙"};
+const CAT_NAMES=["小銀","雷歐","夜影","琥珀","蒼月"];
+
+// 稀有度
+const RARITY=[
+  {id:"n",name:"普通",color:"rar-n",mult:1.0,sellMult:0.3},
+  {id:"r",name:"稀有",color:"rar-r",mult:1.4,sellMult:0.5},
+  {id:"e",name:"史詩",color:"rar-e",mult:1.9,sellMult:0.7},
+  {id:"l",name:"傳說",color:"rar-l",mult:2.8,sellMult:1.0},
+];
+
+// 附魔詞條池（每條有加成類型和描述）
+const ENCHANTS=[
+  // ATK 系
+  {id:"sharp",name:"鋒利",desc:"ATK +{v}",stat:"atk",base:3,scale:1.8,color:"#f87171"},
+  {id:"fury",name:"狂怒",desc:"ATK +{v}",stat:"atk",base:5,scale:2.5,color:"#f87171"},
+  {id:"crit",name:"致命",desc:"暴擊傷害 +{v}%",stat:"critDmg",base:15,scale:5,color:"#fb923c"},
+  {id:"swift",name:"迅捷",desc:"暴擊率 +{v}%",stat:"critRate",base:5,scale:2,color:"#fb923c"},
+  // DEF 系
+  {id:"guard",name:"守護",desc:"DEF +{v}",stat:"def",base:2,scale:1.2,color:"#60a5fa"},
+  {id:"tough",name:"堅韌",desc:"DEF +{v}",stat:"def",base:4,scale:2.0,color:"#60a5fa"},
+  {id:"absorb",name:"吸收",desc:"受傷時回復 {v} HP",stat:"lifeSteal",base:3,scale:1.5,color:"#34d399"},
+  // HP 系
+  {id:"vitality",name:"活力",desc:"最大HP +{v}",stat:"maxHp",base:10,scale:6,color:"#34d399"},
+  {id:"regen",name:"再生",desc:"每回合回復 {v} HP",stat:"regen",base:2,scale:1.2,color:"#34d399"},
+  // 特殊
+  {id:"gold",name:"財富",desc:"金幣獲得 +{v}%",stat:"goldBonus",base:10,scale:4,color:"#fbbf24"},
+  {id:"exp",name:"學識",desc:"EXP獲得 +{v}%",stat:"expBonus",base:10,scale:4,color:"#a78bfa"},
+];
+
+// 附魔等級 1~5，等級越高數值越大
+function rollEnchant(villageId){
+  const e=ENCHANTS[Math.floor(Math.random()*ENCHANTS.length)];
+  const lv=Math.min(5,1+Math.floor(villageId/2)); // 村莊越後等級越高
+  const val=Math.round(e.base+e.scale*(lv-1));
+  return{id:e.id,name:e.name,desc:e.desc.replace("{v}",val),stat:e.stat,val,lv,color:e.color};
+}
+
+// 最多附魔數（依稀有度）
+const MAX_ENCHANTS={n:1,r:2,e:3,l:4};
+
+// 裝備基礎模板
+const EQUIP_TEMPLATES=[
+  // 武器
+  {id:"dagger",name:"匕首",slot:"weapon",baseAtk:4,price:30,emoji:"🗡️"},
+  {id:"sword",name:"劍",slot:"weapon",baseAtk:8,price:70,emoji:"⚔️"},
+  {id:"greatsword",name:"大劍",slot:"weapon",baseAtk:14,price:140,emoji:"🗡️"},
+  {id:"staff",name:"魔杖",slot:"weapon",baseAtk:10,price:90,emoji:"🪄"},
+  {id:"bow",name:"弓",slot:"weapon",baseAtk:7,price:65,emoji:"🏹"},
+  {id:"spear",name:"長槍",slot:"weapon",baseAtk:12,price:120,emoji:"🔱"},
+  {id:"katana",name:"太刀",slot:"weapon",baseAtk:16,price:200,emoji:"⚔️"},
+  {id:"scythe",name:"大鐮刀",slot:"weapon",baseAtk:22,price:320,emoji:"💀"},
+  // 護甲
+  {id:"cloth",name:"布衣",slot:"armor",baseDef:2,price:20,emoji:"👕"},
+  {id:"leather",name:"皮甲",slot:"armor",baseDef:5,price:55,emoji:"🦺"},
+  {id:"chainmail",name:"鎖甲",slot:"armor",baseDef:9,price:110,emoji:"🥋"},
+  {id:"plate",name:"板甲",slot:"armor",baseDef:15,price:220,emoji:"🛡️"},
+  {id:"robe",name:"魔法袍",slot:"armor",baseDef:7,baseAtk:4,price:130,emoji:"🧥"},
+  {id:"shadowcloak",name:"暗影斗篷",slot:"armor",baseDef:11,price:180,emoji:"🌑"},
+  // 頭盔
+  {id:"hood",name:"兜帽",slot:"helm",baseDef:2,price:18,emoji:"🎩"},
+  {id:"cathelm",name:"貓耳頭盔",slot:"helm",baseDef:4,price:50,emoji:"🪖"},
+  {id:"fullhelm",name:"全罩頭盔",slot:"helm",baseDef:8,price:100,emoji:"⛑️"},
+  {id:"crownhelm",name:"王者頭冠",slot:"helm",baseDef:12,price:250,emoji:"👑"},
+  // 飾品
+  {id:"ring",name:"戒指",slot:"acc",baseAtk:2,price:40,emoji:"💍"},
+  {id:"amulet",name:"護身符",slot:"acc",baseDef:3,price:45,emoji:"📿"},
+  {id:"pendant",name:"吊墜",slot:"acc",baseAtk:4,baseDef:2,price:90,emoji:"🔮"},
+  {id:"cape",name:"英雄披風",slot:"acc",baseAtk:3,baseDef:4,price:120,emoji:"🦸"},
+  // 消耗品
+  {id:"pot_s",name:"小回復藥",slot:"item",heal:35,price:15,emoji:"🧪"},
+  {id:"pot_m",name:"中回復藥",slot:"item",heal:80,price:35,emoji:"💊"},
+  {id:"pot_l",name:"大回復藥",slot:"item",heal:160,price:70,emoji:"💉"},
+  {id:"elixir",name:"仙靈露水",slot:"item",heal:999,price:200,emoji:"✨"},
+];
+
+// 10個村莊
+const VILLAGES=[
+  {id:0,name:"晨曦村",emoji:"🌅",desc:"平靜的起點，微風輕拂的小村莊",lvRange:[1,5],bossLv:5},
+  {id:1,name:"翠林鎮",emoji:"🌲",desc:"被古老森林包圍，野獸出沒頻繁",lvRange:[6,12],bossLv:12},
+  {id:2,name:"石岩城",emoji:"⛰️",desc:"建於山壁之上，礦工與冒險者聚集地",lvRange:[13,20],bossLv:20},
+  {id:3,name:"暮沙港",emoji:"⚓",desc:"海風鹹腥，走私客與水手的巢穴",lvRange:[21,30],bossLv:30},
+  {id:4,name:"血月原",emoji:"🌕",desc:"永遠籠罩在血色月光下的荒野",lvRange:[31,42],bossLv:42},
+  {id:5,name:"冰封堡",emoji:"❄️",desc:"極北之地，寒風刺骨，強者的試煉場",lvRange:[43,56],bossLv:56},
+  {id:6,name:"熔岩窟",emoji:"🌋",desc:"火山地帶，岩漿噴湧，危機四伏",lvRange:[57,72],bossLv:72},
+  {id:7,name:"幽靈林",emoji:"👻",desc:"亡靈橫行，不死生物的棲息地",lvRange:[73,90],bossLv:90},
+  {id:8,name:"天空島",emoji:"☁️",desc:"浮於雲端的神秘島嶼，神明的庭院",lvRange:[91,110],bossLv:110},
+  {id:9,name:"混沌核心",emoji:"💀",desc:"世界盡頭，終極惡魔的領域",lvRange:[111,999],bossLv:150},
+];
+
+// 每個村莊的怪物（非boss）
+const VILLAGE_MONSTERS=[
+  // 村莊0
+  [{name:"迷途老鼠",emoji:"🐀",hpMult:1,atkMult:1},{name:"野狗",emoji:"🐕",hpMult:1.3,atkMult:1.2},{name:"毒蘑菇精",emoji:"🍄",hpMult:1.5,atkMult:1.4}],
+  // 村莊1
+  [{name:"森林蜘蛛",emoji:"🕷️",hpMult:1,atkMult:1},{name:"巨型蜜蜂",emoji:"🐝",hpMult:1.2,atkMult:1.3},{name:"食人植物",emoji:"🌿",hpMult:1.6,atkMult:1.5}],
+  // 村莊2
+  [{name:"石頭怪",emoji:"🪨",hpMult:1,atkMult:1},{name:"地底蠍",emoji:"🦂",hpMult:1.3,atkMult:1.3},{name:"岩石巨人",emoji:"⛏️",hpMult:1.8,atkMult:1.6}],
+  // 村莊3
+  [{name:"海盜幽魂",emoji:"☠️",hpMult:1,atkMult:1},{name:"深海章魚",emoji:"🐙",hpMult:1.4,atkMult:1.4},{name:"鯊魚武士",emoji:"🦈",hpMult:1.9,atkMult:1.7}],
+  // 村莊4
+  [{name:"血狼",emoji:"🐺",hpMult:1,atkMult:1},{name:"血月騎士",emoji:"🩸",hpMult:1.4,atkMult:1.5},{name:"惡魔獵手",emoji:"👹",hpMult:2.0,atkMult:1.8}],
+  // 村莊5
+  [{name:"冰霜精靈",emoji:"🧊",hpMult:1,atkMult:1},{name:"雪人戰士",emoji:"⛄",hpMult:1.4,atkMult:1.5},{name:"冰龍幼體",emoji:"🐲",hpMult:2.1,atkMult:1.9}],
+  // 村莊6
+  [{name:"火焰蜥蜴",emoji:"🦎",hpMult:1,atkMult:1},{name:"熔岩哥布林",emoji:"👺",hpMult:1.5,atkMult:1.6},{name:"岩漿巨獸",emoji:"🔥",hpMult:2.3,atkMult:2.0}],
+  // 村莊7
+  [{name:"骷髏兵",emoji:"💀",hpMult:1,atkMult:1},{name:"幽靈法師",emoji:"👻",hpMult:1.5,atkMult:1.7},{name:"死靈術士",emoji:"🧟",hpMult:2.4,atkMult:2.1}],
+  // 村莊8
+  [{name:"天使守衛",emoji:"😇",hpMult:1,atkMult:1},{name:"雷霆神鳥",emoji:"⚡",hpMult:1.6,atkMult:1.8},{name:"神界武士",emoji:"🌟",hpMult:2.6,atkMult:2.2}],
+  // 村莊9
+  [{name:"混沌惡魔",emoji:"😈",hpMult:1,atkMult:1},{name:"深淵騎士",emoji:"🖤",hpMult:1.7,atkMult:1.9},{name:"末日使者",emoji:"💣",hpMult:2.8,atkMult:2.3}],
+];
+
+const VILLAGE_BOSSES=[
+  {name:"森林王者",emoji:"🐗",hpMult:4,atkMult:2.2},
+  {name:"古樹精靈王",emoji:"🌳",hpMult:5,atkMult:2.5},
+  {name:"石山霸主",emoji:"⛰️",hpMult:5.5,atkMult:2.7},
+  {name:"海盜船長",emoji:"🏴‍☠️",hpMult:6,atkMult:3.0},
+  {name:"血月惡魔",emoji:"🌑",hpMult:7,atkMult:3.3},
+  {name:"霜龍",emoji:"🐉",hpMult:8,atkMult:3.6},
+  {name:"熔岩神祇",emoji:"🌋",hpMult:9,atkMult:4.0},
+  {name:"死亡君王",emoji:"💀",hpMult:10,atkMult:4.4},
+  {name:"天空神明",emoji:"⚡",hpMult:12,atkMult:5.0},
+  {name:"混沌魔王",emoji:"👑",hpMult:15,atkMult:6.0},
+];
+
+const FOODS=[
+  {name:"小魚乾",hunger:20,mood:5,price:0,emoji:"🐟",free:true},
+  {name:"鮮魚湯",hunger:45,mood:15,price:25,emoji:"🍲"},
+  {name:"烤雞腿",hunger:65,mood:22,price:40,emoji:"🍗"},
+  {name:"貓咪蛋糕",hunger:35,mood:45,price:60,emoji:"🎂"},
+];
+
+const DIALOGUES={
+  feed:["哼……本喵才不是因為好吃才吃的。只是……謝謝你。","喵！這個味道還可以啦……下次多準備一點！","……還不錯。本喵勉強給你一個認可。","喵嗚～好吃！不對，我是說……普通而已。"],
+  play:["哼，跟你玩是為了練習反應速度，不是因為開心！","喵！再來一次！……不是說我很喜歡啦。","……玩得還算可以。你的身手比本喵想的好一點。","嘿嘿，這樣算是本喵贏了喵！"],
+  sleep:["喵……新的一天。今天也要努力呢，才不是為了你！","早安……昨晚睡得還不錯。今天去冒險嗎？","呼……（伸懶腰）本喵精神滿滿了，去打怪！","睡得好香……嗯？哦，你在啊。早安。"],
+  chat:["喵……你找本喵說話，是有什麼事嗎？","最近的冒險還不錯。本喵越來越強了喵！","哼，別以為多跟本喵說話本喵就會高興……才不會呢。","……你看我做什麼？臉上有東西嗎，喵？"],
+  win:["哼，那種程度的對手根本不是本喵的對手！","喵嗚～勝利！今天心情很好，才不是因為你在呢！","本喵果然最強！……嗯，謝謝你的支持啦。","打倒了！快看看有沒有好裝備掉喵～"],
+  lose:["喵……輸了。沒關係，下次本喵一定贏回來！","……好痛。但本喵不會哭的。只是眼睛進沙子了。","哼，今天算你們運氣好。下次絕對不會輸喵！"],
+  hungry:["喵……肚子有點餓了。不是在暗示你什麼，只是說說。","哼，本喵才不是餓了……只是聞到食物的味道而已。"],
+  drop:["哇！有裝備掉下來喵！","這個……看起來不錯喵！","撿到好東西了喵嗚～"],
+};
+
+// ══════════════════════════════════════════════════
+// 狀態
+// ══════════════════════════════════════════════════
+let S={
+  screen:"title",   // title|create|main|battle|area
+  tab:"home",       // home|map|shop|inventory
+  shopTab:"equip",
+  cat:null,
+  battle:null,
+  battleTurn:"player",
+  currentVillage:0, // 地圖上選的村莊
+  currentMonsters:[], // 當前地區怪物列表（固定，不重新隨機）
+  enchantShop:[], // 附魔商店當前選項
+  enchantTarget:null, // 選中要附魔的裝備 index
+  log:[],
+  dialogues:[],
+};
+
+// ══════════════════════════════════════════════════
+// 工具
+// ══════════════════════════════════════════════════
+function notify(msg,type="i"){
+  const el=document.getElementById("notif");
+  el.textContent=msg;el.className=`notif n${type}`;el.classList.remove("hidden");
+  setTimeout(()=>el.classList.add("hidden"),2500);
+}
+function addLog(text,color="#c9d1d9"){
+  S.log.push({text,color,id:Date.now()+Math.random()});
+  if(S.log.length>50)S.log.shift();
+}
+function dlg(type){
+  const cat=S.cat;
+  if(type==="feed"&&cat&&cat.hunger<30)type="hungry";
+  if(type==="chat"&&cat&&cat.mood<30)type="chat";
+  const list=DIALOGUES[type]||DIALOGUES.chat;
+  const reply=list[Math.floor(Math.random()*list.length)];
+  S.dialogues.push({content:reply});
+  if(S.dialogues.length>8)S.dialogues.shift();
+}
+function getTotalAtk(cat){
+  let b=0;
+  ["weapon","acc"].forEach(s=>{if(cat.equip[s])b+=cat.equip[s].atk||0});
+  return cat.atk+b;
+}
+function getTotalDef(cat){
+  let b=0;
+  ["armor","helm","acc"].forEach(s=>{if(cat.equip[s])b+=cat.equip[s].def||0});
+  return cat.def+b;
+}
+function checkLevelUp(cat){
+  while(cat.exp>=cat.expNext){
+    cat.exp-=cat.expNext;cat.lv+=1;
+    cat.expNext=Math.floor(cat.expNext*1.45);
+    cat.maxHp+=18;cat.hp=cat.maxHp;cat.atk+=4;cat.def+=2;
+    addLog(`🎉 ${cat.name} 升到 Lv.${cat.lv}！`,`#ffd700`);
+    notify(`⬆️ 升級！Lv.${cat.lv}`,"s");
+  }
+}
+
+// 隨機裝備生成
+function randRarity(isBoss){
+  const r=Math.random();
+  if(isBoss){
+    if(r<0.05)return RARITY[3]; // 5% 傳說
+    if(r<0.25)return RARITY[2]; // 20% 史詩
+    if(r<0.65)return RARITY[1]; // 40% 稀有
+    return RARITY[0];
+  } else {
+    if(r<0.01)return RARITY[3];
+    if(r<0.08)return RARITY[2];
+    if(r<0.30)return RARITY[1];
+    return RARITY[0];
+  }
+}
+
+// 每個村莊的裝備名稱表（外觀用，數值另外算）
+const EQUIP_NAMES={
+  weapon:[
+    ["生鏽短刀","🗡️"],["獵人彎刀","🗡️"],["精鋼劍","⚔️"],["森林長弓","🏹"],
+    ["海盜彎刀","⚔️"],["霜刃劍","⚔️"],["岩漿大劍","🗡️"],["幽冥鐮刀","💀"],
+    ["神聖長槍","🔱"],["混沌魔刃","⚔️"],
+  ],
+  armor:[
+    ["粗布衣","👕"],["皮革甲","🦺"],["石紋重甲","🥋"],["海浪護甲","🛡️"],
+    ["血月板甲","🛡️"],["霜鐵鎖甲","🥋"],["熔岩甲胄","🛡️"],["幽靈薄甲","🌑"],
+    ["天神袍","🧥"],["混沌暗甲","🛡️"],
+  ],
+  helm:[
+    ["布兜帽","🎩"],["貓耳頭盔","🪖"],["石礦鋼盔","⛑️"],["船長帽","🎩"],
+    ["月牙頭冠","🪖"],["冰霜盔","⛑️"],["烈焰頭盔","🪖"],["死骨面具","💀"],
+    ["天使光環","✨"],["魔王冠冕","👑"],
+  ],
+  acc:[
+    ["木製護符","📿"],["獵人戒指","💍"],["礦石吊墜","🔮"],["海神珠","📿"],
+    ["血月寶石","💎"],["冰晶戒指","💍"],["熔核護符","🔮"],["靈魂鎖鏈","📿"],
+    ["神明之眼","✨"],["混沌核心","💀"],
+  ],
+};
+
+function generateEquip(villageId,isBoss){
+  const slots=["weapon","armor","helm","acc"];
+  const slot=slots[Math.floor(Math.random()*slots.length)];
+  const rar=randRarity(isBoss);
+  const rm=rar.mult;
+
+  // 直接依村莊等級算基礎數值（不依賴模板基礎數）
+  // 村莊0：ATK~8/DEF~4，每村莊大幅成長
+  const base=VILLAGES[villageId].bossLv; // 用boss等級當基準
+  const v=()=>(1+((Math.random()-0.5)*0.25));
+
+  let atk=0,def=0;
+  if(slot==="weapon"){
+    atk=Math.floor(base*1.8*rm*v());
+  } else if(slot==="armor"){
+    def=Math.floor(base*0.9*rm*v());
+  } else if(slot==="helm"){
+    def=Math.floor(base*0.5*rm*v());
+  } else { // acc
+    atk=Math.floor(base*0.6*rm*v());
+    def=Math.floor(base*0.4*rm*v());
+  }
+
+  // Boss掉落額外加成20%
+  if(isBoss){atk=Math.floor(atk*1.2);def=Math.floor(def*1.2);}
+
+  const nameArr=EQUIP_NAMES[slot][villageId];
+  const sellP=Math.floor(base*rm*(isBoss?8:4));
+  const item={
+    id:`gen_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,
+    name:`${rar.id==="n"?"":`[${rar.name}] `}${nameArr[0]}`,
+    slot,
+    emoji:nameArr[1],
+    rarity:rar.id,
+    price:sellP*3,
+    sellPrice:sellP,
+    qty:1,
+  };
+  if(atk>0)item.atk=atk;
+  if(def>0)item.def=def;
+
+  // 附魔詞條
+  const maxE=MAX_ENCHANTS[rar.id]||0;
+  item.enchants=[];
+  const usedIds=new Set();
+  for(let i=0;i<maxE;i++){
+    let enc=rollEnchant(villageId);
+    let tries=0;
+    while(usedIds.has(enc.id)&&tries<8){enc=rollEnchant(villageId);tries++;}
+    usedIds.add(enc.id);
+    item.enchants.push(enc);
+    // 附魔也影響數值
+    if(enc.stat==="atk")item.atk=(item.atk||0)+enc.val;
+    if(enc.stat==="def")item.def=(item.def||0)+enc.val;
+    if(enc.stat==="maxHp")item.bonusHp=(item.bonusHp||0)+enc.val;
+  }
+  return item;
+}
+
+function shopPool(villageId){
+  // 商店只賣固定裝備+消耗品
+  const equips=EQUIP_TEMPLATES.filter(e=>e.slot!=="item");
+  const maxIdx=Math.min(equips.length-1,Math.floor(((villageId+1)/10)*equips.length)+2);
+  const pool=equips.slice(0,maxIdx+1);
+  const items=EQUIP_TEMPLATES.filter(e=>e.slot==="item");
+  return {equips:pool,items};
+}
+
+// ══════════════════════════════════════════════════
+// 村莊怪物生成
+// ══════════════════════════════════════════════════
+// 附魔商店：生成 3 個隨機附魔選項
+function refreshEnchantShop(){
+  const villageId=S.cat?.unlockedVillage||0;
+  const baseCost=Math.floor(60*(1+villageId*0.5));
+  // 每個選項有不同費用（依附魔等級浮動）
+  S.enchantShop=Array.from({length:4},()=>{
+    const enc=rollEnchant(villageId);
+    const cost=Math.floor(baseCost*(0.7+enc.lv*0.2)*(0.85+Math.random()*0.3));
+    return{...enc,cost};
+  });
+  S.enchantTarget=null;
+}
+
+// 對裝備附魔
+function applyEnchant(encIdx){
+  const cat=S.cat;
+  const enc=S.enchantShop[encIdx];
+  if(!enc)return;
+  if(S.enchantTarget===null||S.enchantTarget===undefined){notify("請先選擇要附魔的裝備！","e");return;}
+  if(cat.gold<enc.cost){notify("金幣不足！","e");return;}
+
+  // 支援背包裝備（idx>=0）和已穿戴裝備（字串 slot 名稱）
+  let target=null;
+  const t=S.enchantTarget;
+  if(typeof t==="number"){
+    target=cat.inventory[t];
+  } else {
+    target=cat.equip[t]; // slot 名稱
+  }
+  if(!target){notify("請重新選擇裝備","e");S.enchantTarget=null;render();return;}
+  if(target.slot==="item"){notify("消耗品無法附魔","e");return;}
+
+  const maxE=MAX_ENCHANTS[target.rarity]||1;
+  if((target.enchants||[]).length>=maxE){
+    notify(`此裝備最多 ${maxE} 條附魔，已滿！`,"e");return;
+  }
+  if((target.enchants||[]).some(e=>e.id===enc.id)){
+    notify("此裝備已有相同附魔！","e");return;
+  }
+
+  cat.gold-=enc.cost;
+  if(!target.enchants)target.enchants=[];
+  target.enchants.push(enc);
+  // 套用數值加成
+  if(enc.stat==="atk")target.atk=(target.atk||0)+enc.val;
+  if(enc.stat==="def")target.def=(target.def||0)+enc.val;
+  if(enc.stat==="maxHp"){
+    target.bonusHp=(target.bonusHp||0)+enc.val;
+    cat.maxHp+=enc.val;cat.hp=Math.min(cat.hp+enc.val,cat.maxHp);
+  }
+
+  addLog(`✦ ${target.emoji}${target.name} 附魔【${enc.name}】Lv.${enc.lv} 成功！-${enc.cost}G`,"#c084fc");
+  notify(`✦ 附魔【${enc.name}】成功！`,"s");
+  S.enchantTarget=null;
+  refreshEnchantShop();
+  save();render();
+}
+
+function buildMonster(villageId,isB){
+  const v=VILLAGES[villageId];
+  const lv=isB?v.bossLv:Math.floor(v.lvRange[0]+(Math.random()*(v.lvRange[1]-v.lvRange[0])));
+  const base=isB?VILLAGE_BOSSES[villageId]:VILLAGE_MONSTERS[villageId][Math.floor(Math.random()*VILLAGE_MONSTERS[villageId].length)];
+  const hpBase=lv*18;const atkBase=lv*2.5;
+  return {
+    name:base.name,emoji:base.emoji,
+    hp:Math.floor(hpBase*base.hpMult),
+    curHp:Math.floor(hpBase*base.hpMult),
+    atk:Math.floor(atkBase*base.atkMult),
+    exp:Math.floor(lv*12*(isB?5:1)),
+    gold:Math.floor(lv*6*(isB?4:1)),
+    lv,isBoss:isB,villageId,
+  };
+}
+
+function areaMonsters(villageId){
+  const list=[];
+  for(let i=0;i<3;i++)list.push(buildMonster(villageId,false));
+  list.push({...buildMonster(villageId,true),_boss:true});
+  return list;
+}
+
+// ══════════════════════════════════════════════════
+// 存檔
+// ══════════════════════════════════════════════════
+function save(){
+  if(!S.cat)return;
+  localStorage.setItem("neko2_save",JSON.stringify({cat:S.cat,log:S.log.slice(-20),dialogues:S.dialogues.slice(-4)}));
+}
+function load(){
+  try{
+    const r=localStorage.getItem("neko2_save");
+    if(!r)return false;
+    const d=JSON.parse(r);if(!d.cat)return false;
+    S.cat=d.cat;S.log=d.log||[];S.dialogues=d.dialogues||[];
+    S.screen="main";S.tab="home";S.battle=null;return true;
+  }catch{return false;}
+}
+function exportSave(){
+  const r=localStorage.getItem("neko2_save");
+  if(!r){notify("沒有存檔！","e");return;}
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([r],{type:"application/json"}));
+  a.download=`neko_${S.cat?.name||"save"}.json`;a.click();
+  notify("✅ 存檔已下載","s");
+}
+function importSave(){
+  const inp=document.createElement("input");inp.type="file";inp.accept=".json";
+  inp.onchange=e=>{
+    const f=e.target.files[0];if(!f)return;
+    const fr=new FileReader();
+    fr.onload=ev=>{
+      try{
+        const d=JSON.parse(ev.target.result);if(!d.cat)throw 0;
+        localStorage.setItem("neko2_save",ev.target.result);
+        load();notify("✅ 存檔匯入成功","s");render();
+      }catch{notify("❌ 檔案有誤","e");}
+    };fr.readAsText(f);
+  };inp.click();
+}
+function deleteSave(){
+  localStorage.removeItem("neko2_save");
+  S.cat=null;S.screen="title";S.log=[];S.dialogues=[];render();
+}
+
+// ══════════════════════════════════════════════════
+// 動作
+// ══════════════════════════════════════════════════
+function createCat(name,job){
+  name=name.trim()||CAT_NAMES[Math.floor(Math.random()*CAT_NAMES.length)];
+  S.cat={
+    name,job,lv:1,exp:0,expNext:100,
+    hp:120,maxHp:120,atk:12,def:6,
+    hunger:80,mood:80,gold:100,
+    equip:{weapon:null,armor:null,helm:null,acc:null},
+    inventory:[{...EQUIP_TEMPLATES.find(e=>e.id==="pot_s"),qty:3,rarity:"n",sellPrice:5}],
+    unlockedVillage:0,
+    clearedBosses:[],
+    days:1,
+  };
+  S.screen="main";S.tab="home";
+  S.dialogues=[{content:`嗯……你就是新主人嗎？哼，本喵才不稀罕呢。不過……謝謝你收留我。我叫${name}。`}];
+  addLog(`✨ ${name} 開始了他的冒險之旅！`,"#ffd700");
+  save();render();
+}
+
+function feedCat(food){
+  const c=S.cat;
+  if(!food.free&&c.gold<food.price){notify("金幣不足！","e");return;}
+  c.hunger=Math.min(100,c.hunger+food.hunger);
+  c.mood=Math.min(100,c.mood+food.mood);
+  if(!food.free)c.gold-=food.price;
+  addLog(`🍽️ 餵了${c.name} ${food.emoji}${food.name}`,"#7ee8a2");
+  dlg("feed");save();render();
+}
+function playCat(){
+  const c=S.cat;
+  c.mood=Math.min(100,c.mood+18);c.hunger=Math.max(0,c.hunger-10);
+  addLog(`🎮 和${c.name}玩耍了一會兒！`,"#7ee8a2");
+  dlg("play");save();render();
+}
+function sleepDay(){
+  const c=S.cat;
+  c.hp=Math.min(c.maxHp,c.hp+Math.floor(c.maxHp*0.35));
+  c.hunger=Math.max(0,c.hunger-20);c.mood=Math.max(0,c.mood-5);c.days+=1;
+  addLog(`🌙 第 ${c.days} 天開始了`,"#a78bfa");
+  dlg("sleep");save();render();
+}
+
+// 進入地區
+function enterArea(villageId){
+  const cat=S.cat;
+  if(villageId>cat.unlockedVillage){notify("尚未解鎖！","e");return;}
+  S.currentVillage=villageId;
+  S.currentMonsters=areaMonsters(villageId); // 只生成一次
+  S.screen="area";render();
+}
+
+// 開始戰鬥
+function startBattle(monster){
+  S.battle={monster:{...monster},over:false,result:null,dropItem:null};
+  S.battleTurn="player";
+  S.screen="battle";
+  addLog(`⚔️ 遭遇了 ${monster.emoji}${monster.name}（Lv.${monster.lv}）！`,"#f87171");
+  render();
+}
+
+function playerAttack(){
+  if(!S.battle||S.battle.over||S.battleTurn!=="player")return;
+  const cat=S.cat;const m=S.battle.monster;
+  const dmg=Math.max(1,getTotalAtk(cat)-Math.floor(Math.random()*3));
+  // 心情影響暴擊率：心情80+暴擊率+15%，心情30-只剩5%
+  const moodBonus=cat.mood>=80?0.15:cat.mood>=50?0.05:cat.mood>=30?-0.05:-0.10;
+  // 附魔critRate加成
+  const encCritRate=["weapon","armor","helm","acc"].reduce((sum,s)=>{
+    const e=cat.equip[s];return sum+(e?.enchants||[]).filter(en=>en.stat==="critRate").reduce((a,en)=>a+en.val/100,0);
+  },0);
+  const critChance=Math.max(0.02,0.15+moodBonus+encCritRate);
+  const crit=Math.random()<critChance;
+  // 附魔critDmg加成
+  const encCritDmg=["weapon","armor","helm","acc"].reduce((sum,s)=>{
+    const e=cat.equip[s];return sum+(e?.enchants||[]).filter(en=>en.stat==="critDmg").reduce((a,en)=>a+en.val/100,0);
+  },0);
+  const fd=crit?Math.floor(dmg*(2+encCritDmg)):dmg;
+  m.curHp=Math.max(0,m.curHp-fd);
+  addLog(`${crit?"💥 暴擊！":"⚔️"} 造成 ${fd} 傷害${crit?" (暴擊率"+(Math.round(critChance*100))+"%)":""}`,"#fbbf24");
+  if(m.curHp<=0){onBattleWin();return;}
+  S.battleTurn="monster";render();
+  setTimeout(monsterAttack,650);
+}
+
+function onBattleWin(){
+  const cat=S.cat;const m=S.battle.monster;
+  // 心情影響獎勵：心情80+獎勵+20%，心情30-減少20%
+  const moodMult=cat.mood>=80?1.2:cat.mood>=50?1.0:cat.mood>=30?0.85:0.7;
+  // 附魔expBonus/goldBonus
+  const encExpB=["weapon","armor","helm","acc"].reduce((sum,s)=>{
+    const e=cat.equip[s];return sum+(e?.enchants||[]).filter(en=>en.stat==="expBonus").reduce((a,en)=>a+en.val/100,0);
+  },0);
+  const encGoldB=["weapon","armor","helm","acc"].reduce((sum,s)=>{
+    const e=cat.equip[s];return sum+(e?.enchants||[]).filter(en=>en.stat==="goldBonus").reduce((a,en)=>a+en.val/100,0);
+  },0);
+  const finalExp=Math.floor(m.exp*moodMult*(1+encExpB));
+  const finalGold=Math.floor(m.gold*moodMult*(1+encGoldB));
+  cat.exp+=finalExp;cat.gold+=finalGold;cat.mood=Math.min(100,cat.mood+10);
+  if(moodMult!==1.0)addLog(`${cat.mood>=80?"😄 心情好！":"😞 心情差…"} 獎勵 ×${moodMult.toFixed(2)}`,"#a78bfa");
+  checkLevelUp(cat);
+  addLog(`✨ 擊敗 ${m.name}！+${finalExp}EXP +${finalGold}G`,"#ffd700");
+  // 掉落判定
+  let drop=null;
+  const dropChance=m.isBoss?1.0:0.65;
+  if(Math.random()<dropChance){
+    drop=generateEquip(m.villageId,m.isBoss);
+    cat.inventory.push(drop);
+    addLog(`💎 掉落：${drop.emoji}${drop.name}`,"#c084fc");
+    dlg("drop");
+  } else {
+    dlg("win");
+  }
+  // boss 通關
+  if(m.isBoss&&!cat.clearedBosses.includes(m.villageId)){
+    cat.clearedBosses.push(m.villageId);
+    if(m.villageId+1<VILLAGES.length){
+      cat.unlockedVillage=Math.max(cat.unlockedVillage,m.villageId+1);
+      addLog(`🗺️ 解鎖新地區：${VILLAGES[m.villageId+1].emoji}${VILLAGES[m.villageId+1].name}`,"#ffd700");
+      notify(`🗺️ 新地區解鎖！`,"s");
+    } else {
+      addLog(`🏆 恭喜通關所有地區！`,"#ffd700");
+    }
+  }
+  S.battle.over=true;S.battle.result="win";S.battle.dropItem=drop;
+  // 勝利後重新生成怪物列表（除非是boss）
+  if(!m.isBoss) S.currentMonsters=areaMonsters(m.villageId);
+  save();render();
+}
+
+function monsterAttack(){
+  if(!S.battle||S.battle.over)return;
+  const cat=S.cat;const m=S.battle.monster;
+  const def=getTotalDef(cat);
+  const dmg=Math.max(1,m.atk-def+Math.floor(Math.random()*4)-2);
+  // 吸收附魔：受傷時回復
+  const lifeSteal=["weapon","armor","helm","acc"].reduce((sum,s)=>{
+    const e=cat.equip[s];return sum+(e?.enchants||[]).filter(en=>en.stat==="lifeSteal").reduce((a,en)=>a+en.val,0);
+  },0);
+  cat.hp=Math.max(0,cat.hp-dmg+lifeSteal);
+  if(lifeSteal>0)addLog(`💚 吸收回復 ${lifeSteal} HP`,"#34d399");
+  // 再生附魔
+  const regen=["weapon","armor","helm","acc"].reduce((sum,s)=>{
+    const e=cat.equip[s];return sum+(e?.enchants||[]).filter(en=>en.stat==="regen").reduce((a,en)=>a+en.val,0);
+  },0);
+  if(regen>0){cat.hp=Math.min(cat.maxHp,cat.hp+regen);addLog(`💚 再生回復 ${regen} HP`,"#34d399");}
+  addLog(`💢 ${m.name} 攻擊，受到 ${dmg} 傷害`,"#f87171");
+  if(cat.hp<=0){
+    cat.hp=1;cat.mood=Math.max(0,cat.mood-20);
+    addLog(`💀 ${cat.name} 倒下了……`,"#f87171");
+    dlg("lose");S.battle.over=true;S.battle.result="lose";
+    save();render();return;
+  }
+  S.battleTurn="player";render();
+}
+
+function useItem(){
+  const cat=S.cat;
+  const pot=cat.inventory.find(i=>i.heal&&i.qty>0);
+  if(!pot){notify("沒有回復藥！","e");return;}
+  const h=Math.min(cat.maxHp-cat.hp,pot.heal);
+  cat.hp=Math.min(cat.maxHp,cat.hp+pot.heal);
+  pot.qty-=1;cat.inventory=cat.inventory.filter(i=>i.qty>0);
+  addLog(`💊 使用 ${pot.emoji}${pot.name}，回復 ${h} HP`,"#7ee8a2");
+  S.battleTurn="monster";render();setTimeout(monsterAttack,650);
+}
+function flee(){
+  addLog(`💨 逃跑了！`,"#a78bfa");
+  S.screen=S.currentVillage!=null?"area":"main";S.battle=null;render();
+}
+
+// 商店買入
+function buyItem(tpl){
+  const cat=S.cat;
+  if(cat.gold<tpl.price){notify("金幣不足！","e");return;}
+  cat.gold-=tpl.price;
+  if(tpl.slot==="item"){
+    const ex=cat.inventory.find(i=>i.id===tpl.id);
+    if(ex)ex.qty+=1;
+    else cat.inventory.push({...tpl,qty:1,rarity:"n",sellPrice:Math.floor(tpl.price*0.3)});
+  } else {
+    // 生成帶稀有度的裝備（商店給普通品）
+    const item={...tpl,qty:1,rarity:"n",sellPrice:Math.floor(tpl.price*0.3)};
+    if(tpl.baseAtk)item.atk=tpl.baseAtk;
+    if(tpl.baseDef)item.def=tpl.baseDef;
+    cat.inventory.push(item);
+  }
+  notify(`✅ 購入 ${tpl.emoji}${tpl.name}`,"s");
+  addLog(`🛒 購入 ${tpl.emoji}${tpl.name}（-${tpl.price}G）`,"#fbbf24");
+  save();render();
+}
+
+// 賣出裝備
+function sellItem(idx){
+  const cat=S.cat;
+  const item=cat.inventory[idx];
+  if(!item)return;
+  const price=item.sellPrice||Math.floor((item.price||10)*0.3);
+  cat.gold+=price;
+  item.qty-=1;cat.inventory=cat.inventory.filter(i=>i.qty>0);
+  notify(`💰 賣出 +${price}G`,"s");
+  addLog(`💰 賣出 ${item.emoji}${item.name} +${price}G`,"#fbbf24");
+  save();render();
+}
+
+// 裝備/使用道具
+function equipItem(idx){
+  const cat=S.cat;const item=cat.inventory[idx];
+  if(!item)return;
+  if(item.slot==="item"){
+    const h=Math.min(cat.maxHp-cat.hp,item.heal);
+    cat.hp=Math.min(cat.maxHp,cat.hp+item.heal);
+    item.qty-=1;cat.inventory=cat.inventory.filter(i=>i.qty>0);
+    notify(`💊 回復 ${h} HP`,"s");save();render();return;
+  }
+  const old=cat.equip[item.slot];
+  // 移除舊裝備的HP加成
+  if(old&&old.bonusHp){cat.maxHp-=old.bonusHp;cat.hp=Math.min(cat.hp,cat.maxHp);}
+  cat.equip[item.slot]=item;
+  item.qty-=1;cat.inventory=cat.inventory.filter(i=>i.qty>0);
+  if(old)cat.inventory.push({...old,qty:1});
+  // 套用新裝備HP加成
+  if(item.bonusHp){cat.maxHp+=item.bonusHp;cat.hp+=item.bonusHp;}
+  notify(`🔧 裝備了 ${item.emoji}${item.name}`,"s");
+  save();render();
+}
+
+// ══════════════════════════════════════════════════
+// 貓咪表情
+// ══════════════════════════════════════════════════
+function catFace(cat){
+  const r=cat.hp/cat.maxHp;
+  if(r<0.2)return`<div class="cat-disp"><div class="cat-ears">/\\ /\\</div><div style="color:#f87171">( ╥﹏╥ )</div><div>～～</div></div>`;
+  if(cat.mood>70)return`<div class="cat-disp"><div class="cat-ears">∧∧</div><div style="color:#fbbf24">( ≧ω≦ )</div><div>～♪</div></div>`;
+  if(cat.mood<30)return`<div class="cat-disp"><div class="cat-ears">ᗒ ᗕ</div><div style="color:#94a3b8">( -ˋ_ˊ- )</div><div>...</div></div>`;
+  return`<div class="cat-disp"><div class="cat-ears">∧∧</div><div>( ◕‿◕ )</div><div>～</div></div>`;
+}
+
+// 裝備數值顯示
+function itemStatStr(item){
+  const p=[];
+  if(item.atk)p.push(`ATK +${item.atk}`);
+  if(item.def)p.push(`DEF +${item.def}`);
+  if(item.heal)p.push(`回復 ${item.heal===999?"全滿":item.heal} HP`);
+  if(item.bonusHp)p.push(`HP +${item.bonusHp}`);
+  return p.join(" / ");
+}
+
+function enchantHTML(item){
+  if(!item.enchants||item.enchants.length===0)return"";
+  return item.enchants.map(e=>
+    `<span style="font-size:.65rem;color:${e.color};background:rgba(0,0,0,.3);padding:1px 5px;border-radius:6px;border:1px solid ${e.color}44;margin-right:3px">✦${e.name} ${e.desc}</span>`
+  ).join("");
+}
+
+// ══════════════════════════════════════════════════
+// 渲染
+// ══════════════════════════════════════════════════
+function render(){
+  const app=document.getElementById("app");
+  const {screen,tab,cat,battle,shopTab}=S;
+
+  // TITLE
+  if(screen==="title"){
+    const hs=!!localStorage.getItem("neko2_save");
+    app.innerHTML=`<div class="title">
+      <div class="title-cat">🐱</div>
+      <h1>貓咪少年物語</h1>
+      <p class="title-sub">擬人化養成 × 大地圖 RPG</p>
+      ${hs?`
+        <button class="btn-start" onclick="if(load())render()">▶ 繼續遊戲</button>
+        <button class="btn-back full-w" onclick="S.screen='create';render()">✨ 新遊戲</button>
+        <div class="flex-row" style="width:100%">
+          <button class="btn-back flex1" onclick="exportSave()">📥 匯出存檔</button>
+          <button class="btn-back flex1" onclick="importSave()">📤 匯入存檔</button>
+        </div>
+        <button class="btn-back full-w" style="color:#f87171;border-color:#f87171" onclick="if(confirm('確定刪除存檔？'))deleteSave()">🗑 刪除存檔</button>
+      `:`
+        <button class="btn-start" onclick="S.screen='create';render()">✨ 開始冒險</button>
+        <button class="btn-back full-w" onclick="importSave()">📤 匯入存檔</button>
+      `}
+    </div>`;return;
+  }
+
+  // CREATE
+  if(screen==="create"){
+    app.innerHTML=`<div class="form-screen">
+      <h2>🐾 創建你的貓咪少年</h2>
+      <div class="fg"><label>名字（留空自動生成）</label>
+        <input class="fi" id="cname" placeholder="輸入名字..." maxlength="10"></div>
+      <div class="fg"><label>選擇職業</label>
+        <div class="job-grid">
+          ${JOBS.map(j=>`<button class="jb${S._cj===j?" sel":""}" onclick="S._cj='${j}';render()">${JOB_ICONS[j]} ${j}</button>`).join("")}
+        </div></div>
+      <button class="btn-p" onclick="createCat(document.getElementById('cname').value,S._cj||'見習劍士')">✨ 開始養成</button>
+      <button class="btn-back" onclick="S.screen='title';render()">← 返回</button>
+    </div>`;return;
+  }
+
+  // BATTLE
+  if(screen==="battle"&&battle){
+    const c=cat;const m=battle.monster;
+    const pt=S.battleTurn==="player"&&!battle.over;
+    app.innerHTML=`<div class="battle-wrap">
+      <div class="b-header">${m.isBoss?"👑 BOSS 戰！":"⚔️ 戰鬥中"} ${m.emoji}${m.name} Lv.${m.lv}</div>
+      <div class="b-field">
+        <div class="fighter">
+          <div class="fn">${c.name}</div>
+          <div class="fe">🐱</div>
+          <div class="fh" style="color:#7ee8a2">HP ${c.hp}/${c.maxHp}</div>
+          <div class="fh" style="color:#94a3b8;font-size:.65rem">ATK ${getTotalAtk(c)} DEF ${getTotalDef(c)}</div>
+          <div class="fh" style="color:#a78bfa;font-size:.65rem">心情${c.mood>=80?"😄暴擊↑獎勵↑":c.mood>=50?"😐正常":c.mood>=30?"😟暴擊↓":"😞暴擊↓↓獎勵↓"}</div>
+        </div>
+        <div class="vs">VS</div>
+        <div class="fighter">
+          <div class="fn">${m.name}</div>
+          <div class="fe">${m.emoji}</div>
+          <div class="fh" style="color:#f87171">HP ${m.curHp}/${m.hp}</div>
+          <div class="fh" style="color:#94a3b8;font-size:.65rem">ATK ${m.atk}</div>
+        </div>
+      </div>
+      <div class="b-log" id="blog">${S.log.slice(-12).map(l=>`<div style="color:${l.color}">${l.text}</div>`).join("")}</div>
+      ${!battle.over?`
+      <div class="b-acts">
+        <button class="bb atk" ${pt?"":"disabled"} onclick="playerAttack()">⚔️ 攻擊</button>
+        <button class="bb itm" ${pt?"":"disabled"} onclick="useItem()">💊 道具</button>
+        <button class="bb fle" onclick="flee()">💨 逃跑</button>
+      </div>`:`
+      <div class="b-result ${battle.result==="win"?"win":"lose"}">
+        <h3>${battle.result==="win"?"🏆 勝利！":"💀 落敗..."}</h3>
+        ${battle.dropItem?`<div class="drop-box">💎 獲得：${battle.dropItem.emoji}${battle.dropItem.name}<br><span class="irar ${RARITY.find(r=>r.id===battle.dropItem.rarity)?.color}">${RARITY.find(r=>r.id===battle.dropItem.rarity)?.name}</span> ${itemStatStr(battle.dropItem)}<br>${enchantHTML(battle.dropItem)}</div>`:""}
+        <button class="btn-p" style="margin-top:10px" onclick="S.screen='area';S.battle=null;render()">返回地區</button>
+      </div>`}
+    </div>`;
+    const bl=document.getElementById("blog");if(bl)bl.scrollTop=bl.scrollHeight;return;
+  }
+
+  // AREA SCREEN
+  if(screen==="area"){
+    const v=VILLAGES[S.currentVillage];
+    const monsters=S.currentMonsters;
+    const bossCleared=cat.clearedBosses.includes(S.currentVillage);
+    app.innerHTML=`<div class="mc">
+      <div class="area-screen">
+        <div class="area-header">
+          <div class="area-title">${v.emoji} ${v.name}</div>
+          <button class="btn-back" onclick="S.screen='main';S.tab='map';render()">← 地圖</button>
+        </div>
+        <div style="font-size:.75rem;color:#64748b;margin-bottom:8px">${v.desc}　推薦等級 Lv.${v.lvRange[0]}～${v.lvRange[1]}</div>
+        <div class="st">選擇對手</div>
+        <div class="monster-list">
+          ${monsters.map((m,i)=>{
+            const isB=!!m._boss;
+            const disabled=isB&&bossCleared;
+            return`<div class="mc-card${isB?" boss":""}" onclick="${disabled?"notify('Boss已擊敗！','i')":"startBattle(S.currentMonsters["+i+"])"}">
+              <div class="mc-left">
+                <div class="mc-emoji">${m.emoji}</div>
+                <div>
+                  <div class="mc-name">${m.name} ${isB?`<span class="boss-label">👑 BOSS</span>`:""}${disabled?`<span class="boss-label" style="color:#10b981;border-color:#10b981">✓ 已擊敗</span>`:""}</div>
+                  <div class="mc-stats">Lv.${m.lv} ｜ HP ${m.hp} ｜ ATK ${m.atk}</div>
+                </div>
+              </div>
+              <div class="mc-right">
+                <div class="e">+${m.exp} EXP</div>
+                <div class="g">+${m.gold} G</div>
+                ${isB?`<div style="color:#c084fc;font-size:.68rem">必掉裝備</div>`:""}
+              </div>
+            </div>`;
+          }).join("")}
+        </div>
+      </div>
+    </div>`;return;
+  }
+
+  // MAIN GAME
+  if(screen==="main"&&cat){
+    const hpP=(cat.hp/cat.maxHp*100).toFixed(1);
+    const epP=(cat.exp/cat.expNext*100).toFixed(1);
+    const lastDlg=S.dialogues[S.dialogues.length-1]?.content||"...";
+
+    let content="";
+
+    // HOME TAB
+    if(tab==="home"){
+      content=`<div style="display:flex;flex-direction:column;gap:10px">
+        ${catFace(cat)}
+        <div class="dlg">${lastDlg}</div>
+        <div><div class="st">餵食</div>
+          <div class="fg2">
+            ${FOODS.map((f,i)=>`<button class="fb" onclick="feedCat(FOODS[${i}])">
+              <span class="fi2">${f.emoji}</span>${f.name}
+              <div class="fp">${f.free?"免費":f.price+"G"}</div>
+            </button>`).join("")}
+          </div>
+        </div>
+        <div class="ag">
+          <button class="ab" onclick="playCat()">🎮 玩耍</button>
+          <button class="ab" onclick="sleepDay()">🌙 睡覺</button>
+          <button class="ab" onclick="dlg('chat');render()">💬 閒聊</button>
+          <button class="ab" style="color:#60a5fa;border-color:#60a5fa" onclick="exportSave()">📥 匯出存檔</button>
+        </div>
+        <div><div class="st">事件記錄</div>
+          <div class="logbox" id="mlog">${S.log.map(l=>`<div style="color:${l.color}">${l.text}</div>`).join("")}</div>
+        </div>
+      </div>`;
+    }
+
+    // MAP TAB
+    else if(tab==="map"){
+      content=`<div><div class="st">大地圖 — 選擇地區</div>
+        <div class="map-wrap">
+          ${VILLAGES.map((v,i)=>{
+            const unlocked=i<=cat.unlockedVillage;
+            const cleared=cat.clearedBosses.includes(i);
+            const current=i===cat.unlockedVillage&&!cleared;
+            let cls="village-card";
+            if(!unlocked)cls+=" locked";
+            else if(cleared)cls+=" cleared";
+            else if(current)cls+=" current";
+            return`<div class="${cls}" onclick="enterArea(${i})">
+              <div class="vc-top">
+                <div class="vc-name">${v.emoji} ${v.name}</div>
+                <span class="vc-badge ${unlocked?(cleared?"clr":"cur"):"lck"}">${unlocked?(cleared?"✓ 已通關":"冒險中"):"🔒 未解鎖"}</span>
+              </div>
+              <div class="vc-desc">${v.desc}</div>
+              <div class="vc-stats">
+                <span>推薦 Lv.${v.lvRange[0]}～${v.lvRange[1]}</span>
+                <span class="red">Boss: ${VILLAGE_BOSSES[i].name}</span>
+              </div>
+            </div>`;
+          }).join("")}
+        </div>
+      </div>`;
+    }
+
+    // SHOP TAB
+    else if(tab==="shop"){
+      const pool=shopPool(cat.unlockedVillage);
+      const showList=shopTab==="equip"?pool.equips:pool.items;
+      content=`<div>
+        <div class="shop-tabs">
+          <button class="stb${shopTab==="equip"?" act":""}" onclick="S.shopTab='equip';render()">⚔️ 武具</button>
+          <button class="stb${shopTab==="item"?" act":""}" onclick="S.shopTab='item';render()">🧪 道具</button>
+          <button class="stb${shopTab==="enchant"?" act":""}" onclick="S.shopTab='enchant';if(!S.enchantShop.length)refreshEnchantShop();render()">✦ 附魔</button>
+        </div>
+        ${shopTab!=="enchant"?`<div class="item-list">
+          ${showList.map(tpl=>`<div class="ic">
+            <div class="il">
+              <div class="ie">${tpl.emoji}</div>
+              <div>
+                <div class="iname">${tpl.name}</div>
+                <div class="istat">${tpl.baseAtk?`ATK +${tpl.baseAtk}`:""} ${tpl.baseDef?`DEF +${tpl.baseDef}`:""} ${tpl.heal?`回復 ${tpl.heal===999?"全滿":tpl.heal}`:""}</div>
+              </div>
+            </div>
+            <button class="buy-btn" onclick="buyItem(EQUIP_TEMPLATES.find(e=>e.id==='${tpl.id}'))">${tpl.price}G</button>
+          </div>`).join("")}
+        </div>`:`
+        <!-- 附魔商店 -->
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:.75rem;color:#64748b">① 選擇背包中要附魔的裝備　② 選擇附魔詞條</div>
+
+          <!-- 選裝備 -->
+          <div class="st">選擇裝備（已裝備 或 背包）</div>
+          <div style="display:flex;flex-direction:column;gap:5px;max-height:200px;overflow-y:auto">
+            ${(()=>{
+              const rows=[];
+              // 已裝備的
+              const eqSlots=["weapon","armor","helm","acc"];
+              eqSlots.forEach(slot=>{
+                const item=cat.equip[slot];if(!item)return;
+                const maxE=MAX_ENCHANTS[item.rarity]||1;
+                const curE=(item.enchants||[]).length;
+                const full=curE>=maxE;
+                const sel=S.enchantTarget===slot;
+                rows.push(`<div style="background:${sel?"rgba(124,58,237,.2)":"#1a2535"};border:1px solid ${sel?"#7c3aed":full?"#374151":"#2a3347"};border-radius:9px;padding:8px 11px;cursor:${full?"not-allowed":"pointer"};opacity:${full?".5":"1"};display:flex;justify-content:space-between;align-items:center"
+                  onclick="${full?"notify('附魔已滿！','e')":"S.enchantTarget='"+slot+"';render()"}">
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <span style="font-size:1.3rem">${item.emoji}</span>
+                    <div>
+                      <div style="font-size:.8rem;color:#e2e8f0">${item.name} <span style="color:#64748b;font-size:.65rem">[穿戴中]</span></div>
+                      <div style="font-size:.67rem;color:#64748b;margin-top:1px">${itemStatStr(item)}</div>
+                      <div style="margin-top:2px">${enchantHTML(item)}</div>
+                    </div>
+                  </div>
+                  <span style="font-size:.68rem;color:${full?"#f87171":"#94a3b8"}">${curE}/${maxE}${full?" 已滿":""}</span>
+                </div>`);
+              });
+              // 背包中
+              cat.inventory.forEach((item,i)=>{
+                if(item.slot==="item")return;
+                const maxE=MAX_ENCHANTS[item.rarity]||1;
+                const curE=(item.enchants||[]).length;
+                const full=curE>=maxE;
+                const sel=S.enchantTarget===i;
+                rows.push(`<div style="background:${sel?"rgba(124,58,237,.2)":"#1e2535"};border:1px solid ${sel?"#7c3aed":full?"#374151":"#2a3347"};border-radius:9px;padding:8px 11px;cursor:${full?"not-allowed":"pointer"};opacity:${full?".5":"1"};display:flex;justify-content:space-between;align-items:center"
+                  onclick="${full?"notify('附魔已滿！','e')":"S.enchantTarget="+i+";render()"}">
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <span style="font-size:1.3rem">${item.emoji}</span>
+                    <div>
+                      <div style="font-size:.8rem;color:#e2e8f0">${item.name}</div>
+                      <div style="font-size:.67rem;color:#64748b;margin-top:1px">${itemStatStr(item)}</div>
+                      <div style="margin-top:2px">${enchantHTML(item)}</div>
+                    </div>
+                  </div>
+                  <span style="font-size:.68rem;color:${full?"#f87171":"#94a3b8"}">${curE}/${maxE}${full?" 已滿":""}</span>
+                </div>`);
+              });
+              return rows.length?rows.join(""):`<div style="color:#475569;font-size:.82rem;padding:8px">沒有可附魔的裝備</div>`;
+            })()}
+          </div>
+
+          <!-- 附魔選項 -->
+          <div class="st">選擇附魔詞條</div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            ${S.enchantShop.map((enc,i)=>`
+              <div style="background:#1e2535;border:1px solid #2a3347;border-radius:9px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center">
+                <div>
+                  <span style="color:${enc.color};font-size:.9rem;font-weight:700">✦ ${enc.name}</span>
+                  <span style="font-size:.78rem;color:#94a3b8;margin-left:6px">${enc.desc}</span>
+                  <div style="font-size:.68rem;color:#64748b;margin-top:2px">附魔等級 Lv.${enc.lv}</div>
+                </div>
+                <button class="buy-btn" onclick="applyEnchant(${i})">${enc.cost}G</button>
+              </div>`).join("")}
+          </div>
+          <button class="btn-back full-w" onclick="refreshEnchantShop();render()">🔄 刷新附魔選項</button>
+        </div>`}
+      </div>`;
+    }
+
+    // INVENTORY TAB
+    else if(tab==="inventory"){
+      const slots=[["weapon","武器"],["armor","護甲"],["helm","頭盔"],["acc","飾品"]];
+      content=`<div>
+        <div class="st">已裝備</div>
+        <div class="eq-slots">
+          ${slots.map(([s,l])=>`<div class="es">
+            <div class="es-lbl">${l}</div>
+            <div class="es-item">${cat.equip[s]?.emoji||"－"}</div>
+            <div class="es-name">${cat.equip[s]?.name||"空"}</div>
+            ${cat.equip[s]?`<div class="istat" style="font-size:.6rem">${itemStatStr(cat.equip[s])}</div>`:""}
+            ${cat.equip[s]?.enchants?.length?`<div style="margin-top:3px">${enchantHTML(cat.equip[s])}</div>`:""}
+          </div>`).join("")}
+        </div>
+        <div class="st">背包（點擊裝備/使用，長按賣出）</div>
+        ${cat.inventory.length===0?`<div style="color:#475569;font-size:.82rem;text-align:center;margin-top:16px">背包是空的</div>`:`
+        <div class="inv-grid">
+          ${cat.inventory.map((item,i)=>`<div class="inv-card" onclick="equipItem(${i})">
+            <div class="inv-e">${item.emoji}</div>
+            <div class="inv-n">${item.name}</div>
+            <div class="irar ${RARITY.find(r=>r.id===item.rarity)?.color||"rar-n"}">${RARITY.find(r=>r.id===item.rarity)?.name||"普通"}</div>
+            <div class="inv-s">${itemStatStr(item)}</div>
+            ${item.enchants&&item.enchants.length?`<div style="margin-top:4px">${enchantHTML(item)}</div>`:""}
+            <div class="inv-qty">${item.qty>1?`×${item.qty}`:""}</div>
+            <button class="sell-btn" style="margin-top:4px;font-size:.65rem" onclick="event.stopPropagation();sellItem(${i})">賣 ${item.sellPrice||Math.floor((item.price||10)*0.3)}G</button>
+          </div>`).join("")}
+        </div>`}
+      </div>`;
+    }
+
+    app.innerHTML=`
+      <div class="hdr">
+        <div class="hdr-top">
+          <div class="ci">
+            <h2>${JOB_ICONS[cat.job]} ${cat.name}</h2>
+            <span class="badge">${cat.job}</span>
+            <div class="day-badge">第${cat.days}天 ｜ ${VILLAGES[cat.unlockedVillage]?.emoji}${VILLAGES[cat.unlockedVillage]?.name}</div>
+          </div>
+          <div class="cs">
+            <div>Lv.<strong>${cat.lv}</strong></div>
+            <div>ATK <strong>${getTotalAtk(cat)}</strong> DEF <strong>${getTotalDef(cat)}</strong></div>
+            <div class="gold">💰 ${cat.gold}G</div>
+          </div>
+        </div>
+        <div class="bars">
+          <div class="br"><span class="bl">HP</span><div class="bt"><div class="bf hp" style="width:${hpP}%"></div></div><span class="bv">${cat.hp}/${cat.maxHp}</span></div>
+          <div class="br"><span class="bl">飽食</span><div class="bt"><div class="bf hg" style="width:${cat.hunger}%"></div></div><span class="bv">${cat.hunger}</span></div>
+          <div class="br"><span class="bl">心情</span><div class="bt"><div class="bf md" style="width:${cat.mood}%"></div></div><span class="bv" title="心情影響暴擊率和獎勵">${cat.mood}${cat.mood>=80?"😄":cat.mood>=50?"😐":cat.mood>=30?"😟":"😞"}</span></div>
+          <div class="br"><span class="bl">EXP</span><div class="bt"><div class="bf ep" style="width:${epP}%"></div></div><span class="bv">${cat.exp}/${cat.expNext}</span></div>
+        </div>
+      </div>
+      <div class="tabs">
+        ${[["home","🏠","主頁"],["map","🗺️","地圖"],["shop","🛒","商店"],["inventory","🎒","背包"]].map(([t,ic,lb])=>`
+          <button class="tb${tab===t?" act":""}" onclick="S.tab='${t}';render()">
+            <span class="ti">${ic}</span>${lb}
+          </button>`).join("")}
+      </div>
+      <div class="mc">${content}</div>`;
+
+    const ml=document.getElementById("mlog");if(ml)ml.scrollTop=ml.scrollHeight;
+  }
+}
+
+render();
+</script>
+</body>
+</html>
