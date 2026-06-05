@@ -347,6 +347,7 @@ let S={
   currentMonsters:[], // 當前地區怪物列表（固定，不重新隨機）
   enchantShop:[], // 附魔商店當前選項
   enchantTarget:null, // 選中要附魔的裝備 index
+  enchantRemoveMode:false, // 是否在清除模式
   log:[],
   dialogues:[],
 };
@@ -396,15 +397,13 @@ function checkLevelUp(cat){
 function randRarity(isBoss){
   const r=Math.random();
   if(isBoss){
-    if(r<0.05)return RARITY[3]; // 5% 傳說
-    if(r<0.25)return RARITY[2]; // 20% 史詩
-    if(r<0.65)return RARITY[1]; // 40% 稀有
-    return RARITY[0];
+    if(r<0.25)return RARITY[3]; // 25% 傳說
+    return RARITY[2];           // 75% 史詩（最低保底）
   } else {
-    if(r<0.01)return RARITY[3];
-    if(r<0.08)return RARITY[2];
-    if(r<0.30)return RARITY[1];
-    return RARITY[0];
+    if(r<0.02)return RARITY[3]; // 2% 傳說
+    if(r<0.12)return RARITY[2]; // 10% 史詩
+    if(r<0.40)return RARITY[1]; // 28% 稀有
+    return RARITY[0];           // 60% 普通
   }
 }
 
@@ -516,6 +515,30 @@ function refreshEnchantShop(){
   S.enchantTarget=null;
 }
 
+// 清除附魔
+function removeEnchant(targetKey, enchantIdx){
+  const cat=S.cat;
+  let target=typeof targetKey==="number"?cat.inventory[targetKey]:cat.equip[targetKey];
+  if(!target||!target.enchants||!target.enchants[enchantIdx])return;
+  const enc=target.enchants[enchantIdx];
+  const cost=Math.floor(enc.val*30*(1+(enc.lv||1)*0.5));
+  if(cat.gold<cost){notify(`清除需要 ${cost}G，金幣不足！`,"e");return;}
+  // 移除附魔效果
+  if(enc.stat==="atk")target.atk=Math.max(0,(target.atk||0)-enc.val);
+  if(enc.stat==="def")target.def=Math.max(0,(target.def||0)-enc.val);
+  if(enc.stat==="maxHp"){
+    target.bonusHp=Math.max(0,(target.bonusHp||0)-enc.val);
+    cat.maxHp=Math.max(1,cat.maxHp-enc.val);
+    cat.hp=Math.min(cat.hp,cat.maxHp);
+  }
+  target.enchants.splice(enchantIdx,1);
+  cat.gold-=cost;
+  notify(`🗑 已清除【${enc.name}】-${cost}G`,"s");
+  addLog(`🗑 清除附魔【${enc.name}】（-${cost}G）`,"#94a3b8");
+  S.enchantRemoveMode=false;
+  save();render();
+}
+
 // 對裝備附魔
 function applyEnchant(encIdx){
   const cat=S.cat;
@@ -603,24 +626,91 @@ function load(){
 function exportSave(){
   const r=localStorage.getItem("neko2_save");
   if(!r){notify("沒有存檔！","e");return;}
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(new Blob([r],{type:"application/json"}));
-  a.download=`neko_${S.cat?.name||"save"}.json`;a.click();
-  notify("✅ 存檔已下載","s");
+  // 顯示彈出視窗讓用戶複製
+  let modal=document.getElementById("save-modal");
+  if(!modal){
+    modal=document.createElement("div");
+    modal.id="save-modal";
+    modal.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px";
+    document.body.appendChild(modal);
+  }
+  modal.innerHTML=`
+    <div style="background:#161b25;border:1px solid #2a3347;border-radius:16px;padding:20px;width:100%;max-width:440px;display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:1rem;font-weight:700;color:#a78bfa">📋 複製存檔</div>
+      <div style="font-size:.78rem;color:#94a3b8;line-height:1.6">長按下方文字全選，複製後貼到記事本或任何地方保存。下次要載入時貼回「匯入存檔」即可。</div>
+      <textarea id="save-text" readonly style="width:100%;height:120px;background:#111520;border:1px solid #2a3347;border-radius:8px;color:#60a5fa;font-size:.65rem;padding:10px;font-family:monospace;resize:none;word-break:break-all">${r}</textarea>
+      <button onclick="
+        const ta=document.getElementById('save-text');
+        ta.select();ta.setSelectionRange(0,99999);
+        try{
+          navigator.clipboard.writeText(ta.value).then(()=>notify('✅ 已複製到剪貼板','s')).catch(()=>notify('請長按文字手動複製','i'));
+        }catch(e){notify('請長按文字手動複製','i');}
+      " style="padding:10px;border-radius:8px;border:none;background:linear-gradient(135deg,#7c3aed,#3b82f6);color:#fff;font-family:inherit;font-size:.9rem;cursor:pointer">📋 一鍵複製</button>
+      <button onclick="
+        const r=localStorage.getItem('neko2_save');if(!r)return;
+        try{
+          const a=document.createElement('a');
+          a.href=URL.createObjectURL(new Blob([r],{type:'application/json'}));
+          a.download='neko_'+(S.cat?.name||'save')+'.json';
+          document.body.appendChild(a);a.click();
+          setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+          document.body.removeChild(a);
+          notify('✅ 存檔下載中','s');
+        }catch(e){
+          try{
+            const a=document.createElement('a');
+            a.href='data:application/json;charset=utf-8,'+encodeURIComponent(r);
+            a.download='neko_'+(S.cat?.name||'save')+'.json';
+            document.body.appendChild(a);a.click();document.body.removeChild(a);
+            notify('✅ 存檔下載中','s');
+          }catch(e2){notify('此瀏覽器不支援下載，請用複製方式','e');}
+        }
+      " style="padding:10px;border-radius:8px;border:1px solid #3b82f6;background:transparent;color:#60a5fa;font-family:inherit;font-size:.9rem;cursor:pointer">📥 下載為檔案</button>
+      <button onclick="document.getElementById('save-modal').style.display='none'" style="padding:8px;border-radius:8px;border:1px solid #2a3347;background:#1e2535;color:#94a3b8;font-family:inherit;font-size:.85rem;cursor:pointer">關閉</button>
+    </div>`;
+  modal.style.display="flex";
 }
 function importSave(){
-  const inp=document.createElement("input");inp.type="file";inp.accept=".json";
-  inp.onchange=e=>{
-    const f=e.target.files[0];if(!f)return;
-    const fr=new FileReader();
-    fr.onload=ev=>{
-      try{
-        const d=JSON.parse(ev.target.result);if(!d.cat)throw 0;
-        localStorage.setItem("neko2_save",ev.target.result);
-        load();notify("✅ 存檔匯入成功","s");render();
-      }catch{notify("❌ 檔案有誤","e");}
-    };fr.readAsText(f);
-  };inp.click();
+  let modal=document.getElementById("import-modal");
+  if(!modal){
+    modal=document.createElement("div");
+    modal.id="import-modal";
+    modal.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px";
+    document.body.appendChild(modal);
+  }
+  modal.innerHTML=`
+    <div style="background:#161b25;border:1px solid #2a3347;border-radius:16px;padding:20px;width:100%;max-width:440px;display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:1rem;font-weight:700;color:#a78bfa">📤 匯入存檔</div>
+      <div style="font-size:.78rem;color:#94a3b8">將之前複製的存檔文字貼到下方：</div>
+      <textarea id="import-text" style="width:100%;height:120px;background:#111520;border:1px solid #2a3347;border-radius:8px;color:#e2e8f0;font-size:.65rem;padding:10px;font-family:monospace;resize:none;word-break:break-all" placeholder="把存檔文字貼在這裡..."></textarea>
+      <button onclick="
+        const txt=document.getElementById('import-text').value.trim();
+        if(!txt){notify('請貼上存檔文字','e');return;}
+        try{
+          const d=JSON.parse(txt);if(!d.cat)throw 0;
+          localStorage.setItem('neko2_save',txt);
+          document.getElementById('import-modal').style.display='none';
+          load();notify('✅ 存檔匯入成功','s');render();
+        }catch(e){notify('❌ 存檔格式有誤','e');}
+      " style="padding:10px;border-radius:8px;border:none;background:linear-gradient(135deg,#7c3aed,#3b82f6);color:#fff;font-family:inherit;font-size:.9rem;cursor:pointer">✅ 貼上匯入</button>
+      <button onclick="
+        const inp=document.createElement('input');inp.type='file';inp.accept='.json';
+        inp.onchange=e=>{
+          const f=e.target.files[0];if(!f)return;
+          const fr=new FileReader();
+          fr.onload=ev=>{
+            try{
+              const d=JSON.parse(ev.target.result);if(!d.cat)throw 0;
+              localStorage.setItem('neko2_save',ev.target.result);
+              document.getElementById('import-modal').style.display='none';
+              load();notify('✅ 存檔匯入成功','s');render();
+            }catch{notify('❌ 檔案格式有誤','e');}
+          };fr.readAsText(f);
+        };inp.click();
+      " style="padding:10px;border-radius:8px;border:1px solid #3b82f6;background:transparent;color:#60a5fa;font-family:inherit;font-size:.9rem;cursor:pointer">📂 從檔案匯入</button>
+      <button onclick="document.getElementById('import-modal').style.display='none'" style="padding:8px;border-radius:8px;border:1px solid #2a3347;background:#1e2535;color:#94a3b8;font-family:inherit;font-size:.85rem;cursor:pointer">取消</button>
+    </div>`;
+  modal.style.display="flex";
 }
 function deleteSave(){
   localStorage.removeItem("neko2_save");
@@ -1028,6 +1118,7 @@ function render(){
           <button class="ab" onclick="sleepDay()">🌙 睡覺</button>
           <button class="ab" onclick="dlg('chat');render()">💬 閒聊</button>
           <button class="ab" style="color:#60a5fa;border-color:#60a5fa" onclick="exportSave()">📥 匯出存檔</button>
+          <button class="ab" style="color:#f87171;border-color:#f87171;grid-column:span 2" onclick="if(confirm('確定回到首頁？（存檔不會刪除）')){S.screen='title';S.cat=null;S.log=[];S.dialogues=[];render()}">🏠 回首頁</button>
         </div>
         <div><div class="st">事件記錄</div>
           <div class="logbox" id="mlog">${S.log.map(l=>`<div style="color:${l.color}">${l.text}</div>`).join("")}</div>
@@ -1152,6 +1243,39 @@ function render(){
                 <button class="buy-btn" onclick="applyEnchant(${i})">${enc.cost}G</button>
               </div>`).join("")}
           </div>
+          <!-- 清除附魔模式 -->
+          <div style="margin-top:8px">
+            <button class="btn-back full-w" style="${S.enchantRemoveMode?'border-color:#f87171;color:#f87171':''}"
+              onclick="S.enchantRemoveMode=!S.enchantRemoveMode;S.enchantTarget=null;render()">
+              ${S.enchantRemoveMode?"❌ 取消清除模式":"🗑 清除附魔模式"}
+            </button>
+          </div>
+          ${S.enchantRemoveMode?`
+          <div style="margin-top:8px;background:#1a1015;border:1px solid #f8717144;border-radius:10px;padding:10px">
+            <div style="font-size:.75rem;color:#f87171;margin-bottom:8px">選擇要清除的附魔詞條（費用依數值計算）</div>
+            ${(()=>{
+              const rows=[];
+              const allItems=[
+                ...["weapon","armor","helm","acc"].map(s=>({key:s,item:cat.equip[s],label:"穿戴中"})).filter(x=>x.item&&x.item.enchants?.length),
+                ...cat.inventory.map((item,i)=>({key:i,item,label:"背包"})).filter(x=>x.item.slot!=="item"&&x.item.enchants?.length),
+              ];
+              if(!allItems.length)return`<div style="color:#475569;font-size:.8rem">沒有已附魔的裝備</div>`;
+              allItems.forEach(({key,item,label})=>{
+                item.enchants.forEach((enc,ei)=>{
+                  const cost=Math.floor(enc.val*30*(1+(enc.lv||1)*0.5));
+                  rows.push(`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 8px;background:#1e2535;border-radius:8px;margin-bottom:5px">
+                    <div>
+                      <span style="font-size:.72rem;color:#94a3b8">${item.emoji}${item.name} [${label}] ›</span>
+                      <span style="font-size:.73rem;color:${enc.color};margin-left:4px">✦${enc.name} ${enc.desc}</span>
+                    </div>
+                    <button style="padding:4px 10px;border-radius:6px;border:1px solid #f87171;background:transparent;color:#f87171;font-family:inherit;font-size:.7rem;cursor:pointer;white-space:nowrap"
+                      onclick="removeEnchant(${typeof key==='number'?key:"'"+key+"'"}, ${ei})">清除 ${cost}G</button>
+                  </div>`);
+                });
+              });
+              return rows.join("");
+            })()}
+          </div>`:""}
           <button class="btn-back full-w" onclick="refreshEnchantShop();render()">🔄 刷新附魔選項</button>
         </div>`}
       </div>`;
